@@ -1,0 +1,29 @@
+{
+  "FileVersion": 3,
+  "Version": 2100,
+  "VersionName": "0.21.0-alpha",
+  "FriendlyName": "Digimon MMO Framework",
+  "Description": "Blueprint-first, data-asset/component-driven, server-authoritative multiplayer Digimon MMO framework for Unreal Engine 5.8 with a replicated rotating item vendor exchange, persistent owner-only player item inventories, data-driven HP/SP recovery capsules, polished native item/vendor UI, persistent friends/ignore/guild social systems, BITS economy, authenticated WORLD-chat presence, global player capacity, Digimon vendors, reconnect-safe persistence, Day/Night, swimming/underwater, combat, DigiDex, Digivolution, Party/Bank, Care and Scan/Materialization.",
+  "Category": "Gameplay",
+  "CreatedBy": "Akuma / OpenAI",
+  "CanContainContent": true,
+  "IsBetaVersion": true,
+  "Installed": false,
+  "Modules": [
+    {
+      "Name": "DigimonMMOFramework",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "Niagara",
+      "Enabled": true
+    },
+    {
+      "Name": "Paper2D",
+      "Enabled": true
+    }
+  ]
+}

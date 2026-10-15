@@ -1,0 +1,231 @@
+; Digimon MMO Framework — UE5.8 project integration snippet
+; MERGE these entries into <YourProject>/Config/DefaultGame.ini.
+; Do NOT replace the project's existing Asset Manager array or clear its existing types.
+; Recommended content layout: /Game/DigimonData/...
+
+[/Script/Engine.AssetManagerSettings]
++PrimaryAssetTypesToScan=(PrimaryAssetType="DMFDigimonSpecies",AssetBaseClass="/Script/DigimonMMOFramework.DMFDigimonSpeciesData",bHasBlueprintClasses=False,bIsEditorOnly=False,Directories=((Path="/Game/DigimonData")),SpecificAssets=,Rules=(Priority=-1,ChunkId=-1,bApplyRecursively=True,CookRule=AlwaysCook))
++PrimaryAssetTypesToScan=(PrimaryAssetType="DMFStarterRoster",AssetBaseClass="/Script/DigimonMMOFramework.DMFStarterRosterData",bHasBlueprintClasses=False,bIsEditorOnly=False,Directories=((Path="/Game/DigimonData")),SpecificAssets=,Rules=(Priority=-1,ChunkId=-1,bApplyRecursively=True,CookRule=AlwaysCook))
++PrimaryAssetTypesToScan=(PrimaryAssetType="DMFDigimonAbility",AssetBaseClass="/Script/DigimonMMOFramework.DMFDigimonAbilityData",bHasBlueprintClasses=False,bIsEditorOnly=False,Directories=((Path="/Game/DigimonData")),SpecificAssets=,Rules=(Priority=-1,ChunkId=-1,bApplyRecursively=True,CookRule=AlwaysCook))
++PrimaryAssetTypesToScan=(PrimaryAssetType="DMFPlayerSkin",AssetBaseClass="/Script/DigimonMMOFramework.DMFPlayerSkinData",bHasBlueprintClasses=False,bIsEditorOnly=False,Directories=((Path="/Game/DigimonData")),SpecificAssets=,Rules=(Priority=-1,ChunkId=-1,bApplyRecursively=True,CookRule=AlwaysCook))
++PrimaryAssetTypesToScan=(PrimaryAssetType="DMFItem",AssetBaseClass="/Script/DigimonMMOFramework.DMFItemData",bHasBlueprintClasses=False,bIsEditorOnly=False,Directories=((Path="/Game/DigimonData")),SpecificAssets=,Rules=(Priority=-1,ChunkId=-1,bApplyRecursively=True,CookRule=AlwaysCook))
+
+
+; v0.16.0 shared server world-state persistence used by DMFDayNightSky simulated clocks.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+WorldStateSaveSlot=DMF_ServerWorldState
+
+; v0.15.1 persistent per-account player world location + dedicated first-login spawn.
+; Place DMFNewPlayerStart in the Open World. Location checkpoints reuse AccountAutosaveInterval.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnablePlayerWorldLocationPersistence=True
+bUseDedicatedNewPlayerSpawn=True
+
+; v0.15.0 framework-owned Frontend background + login/main-menu layering.
+; Assign FrontendBackgroundWidgetClass in Project Settings; the framework creates it first and
+; automatically places it 100 Z-order units below the login/main-menu layer. No Level Blueprint race is required.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+; FrontendBackgroundWidgetClass=/Game/UI/WBP_MainMenuBackground.WBP_MainMenuBackground_C
+FrontendUIStartupDelaySeconds=0.25
+bShowNativeFrontendFullscreenBackdrop=False
+NativeFrontendBackdropOpacity=0.34
+FrontendUIViewportZOrder=1000
+
+; v0.14.8 server-authoritative owned-Digimon Level/EXP progression + owner-only native EXP presentation.
+; Each DMFDigimonSpeciesData owns BaseExperienceRequired + ExperienceGrowthMultiplierPerLevel; no CurveFloat asset is required.
+; MaxLevelOverride is optional; zero uses DefaultMaxDigimonLevel.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableOwnedDigimonLeveling=True
+DefaultMaxDigimonLevel=99
+bShowNativeExperienceNotifications=True
+ExperienceProgressAnimationSeconds=1.10
+ExperienceNotificationHoldSeconds=2.20
+LevelUpNotificationHoldSeconds=3.40
+ExperienceNotificationBottomSafeOffset=280.0
+; ExperienceNotificationWidgetClass=/Script/DigimonMMOFramework.DMFExperienceNotificationWidget
+
+; v0.13.0 persistent server-authoritative Digivolution defaults.
+; Author actual branching paths on each DMFDigimonSpeciesData asset under Digivolution > Digivolutions.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableDigivolutionSystem=True
+bAllowBankDigivolution=True
+bBlockDigivolutionDuringCombat=True
+bHideUIForSummonedDigivolution=True
+DigivolutionPresentationDurationSeconds=3.0
+bPreferNiagaraDigivolutionVFX=True
+; DefaultDigivolutionNiagaraSystem=/Game/...
+; DefaultDigivolutionCascadeParticle=/Game/...
+; DefaultDigivolutionSound=/Game/...
+DigivolutionSoundVolumeMultiplier=1.0
+DigivolutionSoundPitchMultiplier=1.0
+
+; v0.12.0 Party + Digimon Bank/Boxes + Party Quick Access defaults.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+MaxPartyDigimon=6
+MaxDigimonBankStorage=200
+DigimonBankSlotsPerPage=30
+bAllowPartySwitchingDuringCombat=False
+MaxPlayerItemStacks=60
+bShowCombatQuickBarBits=True
+bShowCombatQuickBarWorldClock=True
+bShowCombatQuickBarWorldClockPhase=True
+bShowNativePartyQuickBar=True
+bEnableDefaultPartyQuickAccessInput=True
+PartyQuickBarBottomSafeOffset=176.0
+bEnablePartyQuickAccessHomeButton=True
+HomeTeleportRequestCooldownSeconds=4.0
+bShowNativeHomeTeleportNotifications=True
+HomeTeleportNotificationHoldSeconds=3.0
+; HomeTeleportNotificationWidgetClass=/Script/DigimonMMOFramework.DMFHomeTeleportNotificationWidget
+
+; v0.11.1 polished local player camera boom zoom + character-safe camera collision defaults.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnablePlayerCameraZoom=True
+bEnableDefaultPlayerCameraZoomInput=True
+PlayerCameraDefaultBoomLength=400.0
+PlayerCameraMinimumBoomLength=220.0
+PlayerCameraMaximumBoomLength=850.0
+PlayerCameraMouseWheelZoomStep=75.0
+PlayerCameraZoomInterpolationSpeed=14.0
+bIgnorePlayersAndDigimonForCameraCollision=True
+
+
+; v0.11.0 automatic Frontend / Open World / Battle music director defaults.
+; v0.14.4 battle state now persists through manual Idle gaps until the authoritative encounter ends.
+; Assign the three music assets in Project Settings > Audio > Music. Sound Cues are recommended.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableFrameworkMusic=True
+; FrontendMusic=/Game/Audio/Music/SC_MenuMusic.SC_MenuMusic
+; OpenWorldMusic=/Game/Audio/Music/SC_OpenWorldMusic.SC_OpenWorldMusic
+; BattleMusic=/Game/Audio/Music/SC_BattleMusic.SC_BattleMusic
+MusicMasterVolume=1.0
+FrontendMusicVolume=1.0
+OpenWorldMusicVolume=1.0
+BattleMusicVolume=1.0
+MusicCrossfadeSeconds=1.25
+BattleMusicReleaseDelaySeconds=1.5
+bAutomaticallyLoopMusic=True
+MusicStateEvaluationInterval=0.20
+
+
+; v0.10.4 automatic replicated player-footstep defaults.
+; Assign PlayerFootstepSound in Project Settings > Player Avatar > Footsteps (a spatial Sound Cue is recommended).
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnablePlayerFootsteps=True
+; PlayerFootstepSound=/Game/Audio/SC_PlayerFootsteps.SC_PlayerFootsteps
+PlayerFootstepMinimumSpeed=35.0
+PlayerFootstepWalkStrideDistance=150.0
+PlayerFootstepSprintStrideDistance=175.0
+PlayerFootstepCrouchStrideDistance=120.0
+PlayerFootstepVolumeMultiplier=1.0
+PlayerFootstepPitchMultiplier=1.0
+
+
+; v0.8.0 Care defaults. Asset references can be assigned more safely in Project Settings.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableCareSystem=True
+CareServerTickInterval=10.0
+CarePresentationLeadInSeconds=0.35
+CareInterServingPauseSeconds=0.20
+CareFallbackMontageDurationSeconds=1.0
+; DefaultDigiMeatMesh=/Game/...
+; DefaultPooMesh=/Game/...
+
+
+; v0.9.x automatic MMO world-nameplate defaults.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableWorldNameplates=True
+bEnablePlayerNameplates=True
+bShowLocalPlayerNameplate=False
+PlayerNameplateMaxDrawDistance=6000.0
+PlayerNameplateHeightOffset=34.0
+bEnableDigimonNameplates=True
+DigimonNameplateMaxDrawDistance=4500.0
+DigimonNameplateHeightOffset=24.0
+bShowDigimonNumericHealthOnNameplates=True
+WorldNameplateRefreshInterval=0.15
+
+; v0.18.5 polished native MMO world-chat defaults + authenticated presence announcements/audio.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableWorldChat=True
+bEnableDefaultWorldChatInput=True
+bEnableWorldChatPresenceAnnouncements=True
+bEnableWorldChatPresenceSounds=True
+; WorldChatPlayerJoinedSound=/Game/Audio/UI/SC_PlayerJoined.SC_PlayerJoined
+; WorldChatPlayerLeftSound=/Game/Audio/UI/SC_PlayerLeft.SC_PlayerLeft
+WorldChatPresenceSoundVolumeMultiplier=1.0
+WorldChatPresenceSoundPitchMultiplier=1.0
+WorldChatMaxMessageLength=220
+WorldChatClientHistoryLimit=100
+WorldChatServerHistoryLimit=50
+WorldChatMinimumSendInterval=0.65
+WorldChatBurstWindowSeconds=10.0
+WorldChatMaxMessagesPerBurst=8
+bShowWorldChatTimestamps=False
+WorldChatBottomSafeOffset=176.0
+
+; v0.10.3 project-configurable admin host / Join Game deployment settings.
+; Enter only the public IPv4 address or DNS hostname here; do not include http:// or :port.
+; Set the Admin Host & Play password from Project Settings > Networking > Admin Hosting. The editor stores only its digest; do not hand-edit a plaintext password into DefaultGame.ini.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+ServerPublicAddress=DigimonMMO3D.custom-gaming.net
+GamePort=7777
+
+; v0.18.4 global authoritative server capacity. The listen host consumes one slot.
+; New joins are refused by Unreal GameSession once this limit is reached.
+GlobalMaxPlayers=100
+
+
+; v0.14 read-only implemented-species encyclopedia
+bEnableDigiDex=True
+
+; v0.14.2 local owner-only combat targeting presentation.
+; Assign the requested PaperSprite/Niagara/Cascade assets in Project Settings > Combat > Targeting Visuals.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableCombatTargetingVisuals=True
+bShowActivePartnerTargetingRing=True
+; ActivePartnerTargetingRingSprite=/Game/...
+ActivePartnerTargetingRingScale=(X=1.0,Y=1.0,Z=1.0)
+ActivePartnerTargetingRingGroundOffset=3.0
+ActivePartnerTargetingRingRotationDegreesPerSecond=28.0
+bShowEnemyTargetingRing=True
+; EnemyTargetingRingSprite=/Game/...
+EnemyTargetingRingScale=(X=1.0,Y=1.0,Z=1.0)
+EnemyTargetingRingGroundOffset=4.0
+EnemyTargetingRingRotationDegreesPerSecond=-42.0
+TargetingRingSpriteRelativeRotation=(Pitch=0.0,Yaw=0.0,Roll=90.0)
+bScaleTargetingRingsToDigimonCapsule=True
+TargetingRingReferenceCapsuleRadius=42.0
+TargetingRingMinimumAutoScale=0.65
+TargetingRingMaximumAutoScale=3.0
+TargetingVisualTranslucentSortPriority=10
+bShowEnemyTargetArrow=True
+bPreferNiagaraEnemyTargetArrow=True
+; EnemyTargetArrowNiagaraSystem=/Game/...
+; EnemyTargetArrowCascadeSystem=/Game/...
+EnemyTargetArrowHeightOffset=60.0
+EnemyTargetArrowScale=(X=1.0,Y=1.0,Z=1.0)
+EnemyTargetArrowRotation=(Pitch=0.0,Yaw=0.0,Roll=0.0)
+EnemyTargetArrowBobAmplitude=10.0
+EnemyTargetArrowBobFrequencyHz=1.5
+
+; v0.19.1 persistent server-authoritative Social hub with owner-local nearby-player friend discovery.
+; Native Social is inside the shared Digimon Menu; player-nameplate context and friend trackers are owner-local presentation.
+[/Script/DigimonMMOFramework.DMFFrameworkSettings]
+bEnableSocialSystem=True
+bEnablePlayerNameplateSocialContext=True
+; PlayerSocialContextWidgetClass=/Script/DigimonMMOFramework.DMFPlayerSocialContextWidget
+; FriendTrackerWidgetClass=/Script/DigimonMMOFramework.DMFFriendTrackerWidget
+FriendTrackerHeightOffset=64.0
+FriendTrackerReconcileInterval=0.75
+NearbyPlayerFriendDiscoveryRadiusMeters=50.0
+NearbyPlayerFriendDiscoveryRefreshInterval=0.5
+MinimumSocialActionInterval=0.15
+MinimumSocialSnapshotRequestInterval=0.35
+MaximumFriendsPerAccount=200
+MaximumIgnoredPlayersPerAccount=200
+MaximumGuildMembers=100
+MaximumPendingGuildInvitesPerAccount=100
+MaximumPendingGuildApplicationsPerGuild=500
+MinimumGuildNameLength=3
+MaximumGuildNameLength=32

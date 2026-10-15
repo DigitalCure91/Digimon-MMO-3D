@@ -1,0 +1,269 @@
+# Production Roadmap
+- [x] **v0.21.0 candidate** Blueprint-derivable replicated Item Vendor Exchange: shared server-rotated stock, multi-quantity BUY/SELL, atomic BITS + stack-capacity transactions, Key/Quest sale protection and polished native UI. Runtime acceptance pending.
+- [x] **v0.17.3** Network-smoothing-compatible replicated swim presentation: remote/listen-server observers receive the flattened Surface/Underwater fallback without mesh-transform fighting or per-frame transform replication.
+
+- [x] v0.17.2 — persisted water restore/teleport reconciliation: immediate server water-state reconstruction, movement-mode recovery and local underwater presentation recovery without SaveGame swim flags.
+- [x] **v0.17.1** Camera-correct local underwater post-process/color grading plus native per-water exponential distance fog, depth response, smooth waterline blending and optional custom Post Process materials.
+- [x] **v0.17.0** Replicated Blueprint-derivable swimmable water, surface/underwater camera-directed player locomotion, native no-animation swim pose fallback, and persistence-safe water re-entry.
+- [x] **v0.16.1** Replicated 12-hour world clock integrated into the combat/ability quick-access HUD, with optional Day/Night status and Blueprint formatting/bindings.
+- [x] **v0.16.0** Replicated persistent Day/Night world clock/sky, Host-PC or simulated time, always-visible digital inner-sky layer, and authoritative Day/Night wild population sets.
+
+
+## Completed — v0.15.3 canonical species stage presentation
+- Species Data Asset `Stage` is now the single presentation source across every native stage label.
+- Fresh / In-Training and all later stages use an explicit runtime-safe canonical formatter, with a Blueprint-pure helper for custom UI.
+- Legacy serialized enum identifiers remain untouched for backward compatibility.
+
+
+The plugin is intentionally being built in dependency order rather than as isolated feature demos.
+
+## Phase 1 — Foundation (complete in v0.1.0)
+- Frontend login / fixed-host join / admin host flow.
+- Server account persistence.
+- Digimon species and unique-instance data model.
+- Owner-only replicated Digimon inventory.
+- Starter partner onboarding.
+- 3D active partner spawning.
+
+## Player avatar foundation extension (implemented in v0.3.0-alpha)
+- Ready-to-use replicated third-person player pawn.
+- Data-asset-driven human character skins.
+- Automatic Asset Manager skin discovery.
+- First-time character appearance onboarding.
+- Persistent server-authoritative skin switching at runtime.
+- Native reskinnable character selection/wardrobe UI.
+
+## Player camera presentation polish — boom zoom & character-safe collision (implemented in v0.11.1-alpha)
+- Automatic Mouse Wheel Up/Down local spring-arm zoom with project-wide default/min/max distances, wheel step and smoothing.
+- Blueprint/Enhanced Input callable zoom API without adding camera replication or account persistence.
+- Player avatars and Digimon globally ignore `ECC_Camera` so characters cannot shove another player's spring-arm camera inward.
+- World/level camera obstruction remains active through the spring arm's normal `ECC_Camera` collision test.
+
+## Player avatar presentation polish — footsteps (implemented in v0.10.4-alpha)
+- Automatic grounded player-only footsteps with no animation-notify requirement.
+- Project Settings Sound Cue/USoundBase assignment with global enable, cadence, volume and pitch controls.
+- Distance-based walk/sprint/crouch cadence and skeleton-independent capsule-base audio origin.
+- Immediate local-owner prediction plus server-authored Unreliable multicast presentation for other relevant players.
+
+## World audio presentation polish — global music director (implemented in v0.11.0-alpha)
+- Project Settings-driven Frontend/Main Menu, Open World and Battle music assets with a master enable switch.
+- Automatic map-context switching plus replicated active-partner combat-state detection.
+- Polished configurable crossfades, per-state/master volumes, battle-exit de-bounce and automatic replay for non-looping tracks.
+- Local-per-player MMO presentation: no music RPCs or replicated soundtrack state; dedicated servers render no music.
+- Blueprint GameInstanceSubsystem hooks for current state, state changes, immediate refresh and temporary cinematic suppression.
+
+## Phase 2 — Real-time battle core (implemented in v0.2.0-alpha)
+- Server-authoritative combat state machine.
+- Wild/NPC/owned Digimon combatants.
+- Wild/NPC autonomous combat plus player command queue; owned partners default to manual commands (v0.5.0).
+- Full eligible wild/auto-battle moveset selection with least-recently-used fairness and stable per-move chase intent (v0.14.7).
+- Quick-access ability slots.
+- Attack targeting, cooldowns, SP costs and damage formulas, including v0.6.4 repeat-safe buffered quick-slot input.
+- Attack 1/2 montage + Cascade/Niagara execution and replicated cues.
+- Death/win handling and battle rewards.
+
+## Phase 3 — Capture progression (implemented in v0.7.0-alpha)
+- Species scan-data ledger.
+- Battle victory scan rewards.
+- 100% materialization eligibility.
+- Server-authoritative materialization; v0.12 routes new Digimon to Party first and Bank automatically when Party is full.
+- Duplicate materialization rules and configurable scan caps.
+
+## MMO presentation layer — world nameplates (implemented in v0.9.0-alpha)
+- Automatic remote-player username plates using the public replicated PlayerState display-name channel.
+- Automatic owned/wild Digimon plates with compact name, level, stage, attribute and replicated HP.
+- Master + per-category global settings, draw-distance culling, capsule-relative height and native/Blueprint-reskinnable UI.
+- Presentation remains client-side and does not introduce a second gameplay-authority path.
+
+## MMO communication layer — world chat (implemented in v0.10.0-alpha)
+- Native compact lower-left WORLD chat with Enter-to-chat / Enter-to-send / Escape-to-cancel input flow.
+- Server-authored public usernames, sanitation/length validation and per-player anti-spam rate limits.
+- Bounded server session history for late joiners without continuously replicating a global message array.
+- Blueprint-reskinnable widget/events plus a master global enable switch and configurable history/safety limits.
+- v0.10.1 native HUD safe-layout keeps WORLD chat above/clear of the centered partner quick-access bar with a configurable bottom offset.
+- v0.10.2 centralizes the admin-host/player-join public endpoint in Project Settings; v0.10.3 also makes the Admin Host & Play password Project Settings-configurable with digest-only persistence, removing the remaining source edit from frontend deployment setup while preserving the authoritative listen-server flow.
+- v0.18.4 adds a server-authoritative global maximum-player capacity under Project Settings (default 100), seeded into native GameSession at host startup and reasserted before every PreLogin so client travel options cannot raise the deployment cap.
+- Future channel/guild/private-message/backend routing can extend the accepted-message hook without moving authority into UI.
+
+## Phase 4 — Digimon Party & collection UX (major storage milestone implemented in v0.12.0-alpha)
+- Functional native roster/select/summon/recall foundation — IMPLEMENTED in v0.5.0.
+- Six-Digimon server-authoritative Party with account persistence — IMPLEMENTED in v0.12.0.
+- Anywhere-access persistent Digimon Bank / paged Boxes — IMPLEMENTED in v0.12.0.
+- Server-validated Party ↔ Bank moves plus full-Party atomic swaps — IMPLEMENTED in v0.12.0.
+- Persistent six-slot Party Quick Access HUD with Tab mouse-interaction mode — IMPLEMENTED in v0.12.0.
+- Materialization Party-first / Bank-overflow integration and schema-v4 legacy migration — IMPLEMENTED in v0.12.0.
+- Direct drag/drop gestures, advanced sorting/filtering and stat-spend UX remain future presentation extensions over the authoritative storage API.
+- Native Party/Bank/Scan/Care and Party/combat quickbar layout hardening — IMPLEMENTED in v0.12.1 (scroll-clipped detail bodies, fixed Bank card sizing, compact HUD cards).
+- Polished replicated healer treatment presentation — IMPLEMENTED in v0.12.2 (exclusive one-player station lock, pulsing green interior light, Niagara-preferred/Cascade fallback VFX, spatial heal audio, Party + all Bank/Boxes restoration, Blueprint start/finish hooks).
+
+## Phase 5 — Player item inventory (core implemented in v0.20.0-alpha)
+- [x] Data-asset `UDMFItemData` definitions with presentation, stack, effect and future economy metadata.
+- [x] Persistent owner-only Fast Array stack inventory with schema-v9 migration.
+- [x] Polished native ITEMS page with active-Party target selection and Blueprint reskin hooks.
+- [x] Server-authoritative Small/Medium/Large HP/SP capsule behavior through reusable RestoreHP/RestoreSP effects.
+- [x] Authority-only grant/remove/query APIs for drops, quests, rewards and future economy systems.
+- [x] Dedicated item-shop vendor using shared replicated rotating stock and one authoritative BITS + stack capacity + grant/sale persistence transaction — IMPLEMENTED in v0.21.0-alpha candidate.
+- [ ] Additional item families (battle buffs, status recovery, evolution/care/quest/crafting items) as project design requires.
+- Native drag/drop item UI and quick slots.
+- Feed items integrated with Digimon care.
+
+## Phase 6 — Virtual-pet care (core implemented in v0.8.0-alpha)
+- Persistent Hunger/fullness with server UTC online/offline decay — IMPLEMENTED.
+- Unlimited DigiMeat feeding with per-species hand socket, transform/scale, sequential eating Montages and voice cues — IMPLEMENTED.
+- Feeding presentation hides the Digimon Menu/quickbar, then returns directly to CARE — IMPLEMENTED.
+- Persistent server time-based waste scheduling — IMPLEMENTED.
+- Replicated, scalable, no-collision world poo actor placed on traced ground at the Digimon's standing location — IMPLEMENTED.
+- DigiMeat and poo automatically participate in framework CustomDepth/cel-shading presentation with Blueprint-tunable stencil value — IMPLEMENTED in v0.8.1-alpha.
+- Fart presentation + automatic waste cleanup lifetime — IMPLEMENTED.
+- Happiness, Discipline and Care Mistakes are persistent/exposed foundations; gameplay rules that mutate them remain future care expansion.
+- Care-state Happiness/Discipline/Care-Mistake Digivolution requirements are integrated in v0.13.0; future Care work can add richer ways to mutate those values.
+
+## Phase 7 — Growth and digivolution (Digivolution core implemented in v0.13.0-alpha)
+
+- Digivolution Owned Digimon Party/Bank card aspect-ratio and sparse-row layout hardening — **FIXED in v0.13.1-alpha**.
+- Server-authoritative species-owned numeric EXP thresholds, multi-level rewards, persistent stat growth and native EXP/LEVEL UP presentation — **IMPLEMENTED in v0.14.8-alpha**.
+- Attribute Point grants from `Attribute Points Per Level` — **IMPLEMENTED in v0.14.8-alpha**; dedicated attribute-spending UX/rules remain future expansion.
+- Level + ABI/CAM + optional stat/Care/economy Digivolution requirements — **IMPLEMENTED in v0.13.0-alpha**.
+- Server-authoritative persistent species transition for Party + Bank — **IMPLEMENTED in v0.13.0-alpha**.
+- Replicated active-partner transformation presentation and target-form actor replacement — **IMPLEMENTED in v0.13.0-alpha**.
+- Persistent Origin Species + Digivolution History schema-v5 provenance — **IMPLEMENTED in v0.13.0-alpha**.
+- Attribute-spend UX, richer optional progression economies and project-specific de-Digivolution rules remain future growth work; species-owned EXP scaling/level rewards are now first-class in v0.14.8.
+
+## Phase 8 — Ranked NPC arena
+- Data-driven ranked teams.
+- F → S+ progression ladder.
+- Arena challenge flow.
+- Money and ranked battle-point rewards.
+- Native ladder/team/reward UI.
+
+## Phase 9 — MMO hardening
+- Auth-provider abstraction with TLS session tickets.
+- Database provider interface and transactional persistence.
+- reconnect/session recovery;
+- anti-duplication transaction IDs;
+- rate limits and RPC abuse protection;
+- scale testing, relevancy/dormancy tuning and profiling.
+
+
+## Completed foundation additions
+
+- Wild proximity / rarity spawner: server-authoritative activation/unload, weighted rarity entries, min/max population, roaming/leashing, NavMesh-grounded placement, delayed respawn and synchronized ground emergence/despawn presentation (v0.4.1-alpha; v0.4.0 feature foundation, v0.4.1 capsule-placement fix).
+
+- Manual owned-partner combat controls, player/wild role balance, free server-authoritative healer actor, and native Digimon roster/summon/recall UI implemented in v0.5.0-alpha.
+
+- Native no-cast player interaction/targeting implemented in v0.5.2-alpha: one player `Interact` call handles Digimon target selection and healer use, with exposed trace settings, optional target+attack behavior, native `E` input and Blueprint extension hooks while preserving server authority.
+
+- Deterministic defeated-pose locking and passive-until-attacked wild retaliation implemented in v0.5.5-alpha. Wild proactive aggression and defensive retaliation are separate server-authoritative policies; ordinary wild Digimon default to peaceful roaming until damaged.
+
+## Completed in v0.6.0 — native UI presentation pass
+
+- Polished frontend login/play/admin state.
+- Portrait-card starter selector.
+- Portrait-card player skin selector.
+- 6-column Digimon collection/summon grid with selected stats.
+- Icon-capable bottom-center combat quick bar.
+- Shared native visual language and backward-compatible optional widget bindings.
+
+v0.12 builds Party, Bank/Boxes and Party Quick Access on this presentation layer; v0.13 adds persistent branching Digivolution into the same shell. Future UI work can add direct drag/drop gestures, sorting/filtering, item inventory, stat-spend and ranked-battle interfaces without replacing the authoritative storage/evolution model.
+
+## Completed in v0.6.1–v0.6.2 — multiplayer possession and combat-facing polish
+
+- v0.6.1 hardens late-join remote-client avatar recovery/possession and reapplies the account-selected player skin/active partner after authoritative recovery.
+- v0.6.2 adds shared server-authoritative target-facing so partner and wild Digimon turn toward their current enemy before attack execution, with Blueprint-exposed turn rate/tolerance and no client-side combat-rotation authority.
+
+
+### Completed polish: v0.6.4 ability execution reliability
+- Capsule-aware melee/short-range reach across manual, reactive and automatic combat.
+- Unified positive/zero-SP execution gate and authoritative cost deduction.
+- AI controller yaw hardening for target-facing.
+
+- Scan & Materialization — IMPLEMENTED in v0.7.0-alpha
+- Shared Digimon menu Party + Bank/Boxes tabs — IMPLEMENTED in v0.12.0-alpha.
+- Persistent Party/Bank Digivolution with native tab and replicated active-partner transformation — IMPLEMENTED in v0.13.0-alpha.
+
+## Completed — v0.14 DigiDex Species Encyclopedia
+- Read-only Asset-Manager-backed implemented-species registry.
+- Search + Stage/Attribute filters, discovery badges, base profile, Scan/ownership status, evolution-family links and species descriptions.
+- No new replication or persistence channel; designed to scale as the project begins mass species population.
+## Completed — v0.14.1 Replicated Ability Projectiles & VFX Lifecycle
+- Added opt-in server-authoritative replicated projectile execution for fireballs, bolts, rockets and similar attacks.
+- Added per-ability projectile socket/offset, speed, homing, turn-rate, target offset, visual rotation/scale, Niagara/Cascade/mesh, max lifetime and impact VFX/audio authoring.
+- Projectile damage now follows visible authoritative arrival rather than leaving a static socket particle while timed damage occurs separately.
+- Added hard cleanup for projectile actors and all timed/impact attack VFX, including looping Niagara/Cascade systems.
+- Existing Timed Impact abilities remain backward compatible by default.
+
+
+## Completed — v0.14.5 normalized rarity-weighted wild spawning
+
+- Corrected species-count bias in the wild spawn table.
+- Rarity tier is rolled once from eligible `RarityWeights`; entry is then rolled inside that tier from `SelectionWeightMultiplier`.
+- Adding more species to one rarity tier no longer increases that rarity tier's aggregate probability.
+- Existing live caps, population streaming and server-only spawn authority remain intact with no new replication or persistence fields.
+
+## Completed — v0.14.4 persistent Battle music encounter state
+
+- Added a replicated server-authoritative battle-encounter latch separate from transient combat action states.
+- Battle music now remains active through unlimited manual `Idle` pauses between ability presses while the encounter remains alive.
+- Victory, defeat and authoritative combat teardown end the encounter; the existing release delay then returns to Open World music.
+- Added Blueprint `Is Battle Encounter Active` query with no client mutation path and no music/audio RPCs.
+
+## Completed — v0.14.3 local targeting visibility runtime fix
+
+- Removed redundant renderer owner-visibility filtering that could hide all local-only targeting markers from their intended player.
+- Added runtime Project Settings asset recovery and enable/disable resilience during PIE.
+- Preserved the zero-RPC, non-replicated marker architecture and all combat authority contracts.
+
+## Completed — v0.14.2 polished owner-only combat targeting visuals
+
+- Local active-partner PaperSprite selection ring.
+- Local selected-enemy PaperSprite ring.
+- Niagara-preferred / Cascade-fallback hovering enemy arrow.
+- Independent world-Z ring rotation speeds/directions and automatic Digimon capsule-size adaptation.
+- Project Settings exposure and host/multi-client privacy contract.
+
+## Completed — v0.14.6 attack VFX / enemy marker CustomDepth enforcement
+
+- All framework-owned direct attack and projectile-impact Niagara/Cascade components now force `Render CustomDepth Pass = true` immediately when spawned.
+- Replicated moving projectile Niagara/Cascade components force CustomDepth at construction and every presentation refresh before activation.
+- The owner-local enemy overhead target arrow forces CustomDepth for both Niagara and Cascade across construction, hot asset refresh and activation.
+- No stencil value, combat authority, RPC, replication ownership or SaveGame contract changed.
+
+## v0.14.9 completed
+
+Completed: persistent server-authoritative Attribute Point spending for HP/SP/STR/INT/DEF/SPD, native Party/Bank plus-button UX, Blueprint API/result delegate, active-partner in-place replication refresh, and full native Digimon Menu containment/layout polish.
+
+
+## v0.15.1 implemented — persistent player world location + first-login spawn
+- Dedicated placeable `DMFNewPlayerStart` for accounts without a persisted gameplay checkpoint, with enable/priority controls and Blueprint-overridable selection.
+- Save schema v6 per-account map/location/rotation/UTC state.
+- Immediate first-spawn checkpoint plus reuse of the existing account autosave/logout transaction.
+- Returning-player restore before active-partner spawn, with finite/map validation and safe PlayerStart fallback.
+- Zero new RPCs; authoritative pawn transform remains the only persistence source.
+
+## v0.15.0 implemented — framework-owned frontend background layering
+
+- Project Settings exposes `Frontend Background Widget Class`; consuming projects select their authored Widget Blueprint instead of manually creating it in the Frontend Map.
+- `ADMFFrontendHUD` creates the selected background first and automatically places it 100 Z-order units below the login/main-menu layer.
+- Configurable startup delay now measures background-to-login reveal timing rather than relying on Blueprint BeginPlay ordering.
+- Native fallback no longer forces the dark full-screen backdrop; optional dim + opacity remain available in Project Settings.
+- Background creation is non-fatal, and both layers/timers are cleaned up on frontend EndPlay/travel.
+- Presentation-only change: login, hosting, travel, authentication, persistence and multiplayer gameplay authority are unchanged.
+
+
+## v0.15.2 implemented — native Return Home HUD
+
+- Party Quick Access now exposes an interaction-only HOME action under the existing Tab cursor flow.
+- Return Home is server-authoritative and resolves the v0.15.1 `DMFNewPlayerStart`; no client transform is trusted.
+- Successful teleports cleanly terminate the partner encounter/projectiles, reposition the summoned partner, checkpoint v6 location immediately, restore gameplay input, and show an owner-only configurable result toast.
+- Blueprint custom HUDs may request/bind presentation while GameMode retains destination/teleport/save authority.
+
+## Completed in v0.18.0-alpha — Digimon vendor economy
+- Blueprint-derivable replicated Digimon vendor NPC with per-NPC stock configuration.
+- Server randomized level/stat/ABI/CAM/training stock and independent rotating stock scheduler.
+- Progression-aware automatic Buy/Sell valuation with lifetime battle EXP and exact Attribute Point investment provenance.
+- Native owner-local BUY / SELL market UI, transaction confirmation and server result feedback.
+- Atomic Bits/Party/Bank mutation, immediate account persistence, concurrency/range/storage validation and Blueprint trade presentation hooks.
+
+## v0.19 Social foundation completed
+
+The framework now has an extensible persistent Social shell with Friends/Ignore and Guild modules. Future Social sub-tabs can reuse the existing nested-menu structure and owner-only snapshot pattern rather than adding new top-level menus. Candidate future modules include party/group matchmaking, whispers/mail, guild ranks/permissions, guild message-of-the-day and richer online-status/presence states; none of those are required by the v0.19.x Social baseline. Nearby-player friend discovery is already provided by v0.19.1.

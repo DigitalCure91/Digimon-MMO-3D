@@ -1,0 +1,102 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
+#include "DMFCombatQuickBarWidget.generated.h"
+
+class UHorizontalBox;
+class UTextBlock;
+class UImage;
+class USizeBox;
+class UDMFCombatQuickSlotButton;
+class UDMFPlayerDigimonComponent;
+class ADMFDigimonCharacter;
+class ADMFDayNightSky;
+
+UCLASS()
+class DIGIMONMMOFRAMEWORK_API UDMFCombatQuickSlotButton : public UButton
+{
+    GENERATED_BODY()
+
+public:
+    int32 SlotIndex = INDEX_NONE;
+    TWeakObjectPtr<class UDMFCombatQuickBarWidget> OwnerBar;
+
+    void ConfigureSlot(int32 InSlotIndex, class UDMFCombatQuickBarWidget* InOwnerBar);
+
+protected:
+    virtual void SynchronizeProperties() override;
+
+private:
+    UFUNCTION()
+    void HandleClicked();
+};
+
+/** Native fallback quick-access ability bar. Blueprint subclasses can completely reskin it. */
+UCLASS(Blueprintable)
+class DIGIMONMMOFRAMEWORK_API UDMFCombatQuickBarWidget : public UUserWidget
+{
+    GENERATED_BODY()
+
+public:
+    virtual TSharedRef<SWidget> RebuildWidget() override;
+    virtual void NativeConstruct() override;
+    virtual void NativeDestruct() override;
+
+    UFUNCTION(BlueprintCallable, Category="Digimon MMO|Combat UI")
+    void RefreshFromPartner();
+
+    UFUNCTION(BlueprintCallable, Category="Digimon MMO|Combat UI")
+    void ExecuteAbilitySlot(int32 SlotIndex);
+
+    UFUNCTION(BlueprintImplementableEvent, Category="Digimon MMO|Combat UI")
+    void BP_OnQuickBarRefreshed();
+
+protected:
+    UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+    TObjectPtr<UHorizontalBox> AbilityBox;
+
+    UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> TargetText;
+
+    UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> VitalsText;
+
+    /** Optional binding for Blueprint reskins. Displays the owning account's owner-only replicated BITS balance. */
+    UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> BitsText;
+
+    /** Optional binding for Blueprint reskins. Native fallback displays canonical replicated 12-hour world time here. */
+    UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> WorldClockText;
+
+    /** Optional binding for Blueprint reskins. Native fallback displays DAY / NIGHT here. */
+    UPROPERTY(BlueprintReadOnly, meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> WorldClockPhaseText;
+
+private:
+    UPROPERTY(Transient)
+    TObjectPtr<UDMFPlayerDigimonComponent> BoundDigimonComponent;
+
+    UPROPERTY(Transient)
+    TArray<TObjectPtr<UTextBlock>> NativeSlotLabels;
+
+    UPROPERTY(Transient)
+    TArray<TObjectPtr<UImage>> NativeSlotIcons;
+
+    TArray<TWeakObjectPtr<USizeBox>> NativeSlotIconContainers;
+
+    TWeakObjectPtr<ADMFDayNightSky> BoundDayNightSky;
+    TWeakObjectPtr<USizeBox> NativeBitsContainer;
+    TWeakObjectPtr<USizeBox> NativeWorldClockContainer;
+    double NextDayNightSkyResolveAttemptSeconds = 0.0;
+
+    FTimerHandle RefreshTimer;
+
+    void BuildNativeFallback();
+    void RefreshBits();
+    void RefreshWorldClock();
+    ADMFDayNightSky* ResolveDayNightSky();
+    UDMFPlayerDigimonComponent* ResolveDigimonComponent() const;
+};
